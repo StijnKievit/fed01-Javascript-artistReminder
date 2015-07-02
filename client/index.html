@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Artist reminder</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+</head>
+<body>
+
+
+<div class="container">
+
+
+    <h1>Artist reminder</h1>
+    <hr />
+
+    <div class="page col-md-8"></div>
+
+    <div class="col-md-4">
+        <h2>Favorites</h2>
+        <div class="fav"></div>
+    </div>
+</div>
+
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js" type="text/javascript"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<!--My scripts-->
+
+<!--HelperFunctions-->
+<script src="helpers/mainHelpers.js"></script>
+
+<!--Views-->
+<script src="views/ArtistListView.js"></script>
+<script src="views/ArtistEditView.js"></script>
+<script src="views/favArtistListView.js"></script>
+
+<!--Models-->
+<script src="models/artist.js"></script>
+
+
+<!--Collections-->
+<script src="collections/artists.js"></script>
+<script src="collections/favArtists.js"></script>
+
+<!--Templates-->
+<script type="text/template" id="artist-list-template">
+    <a href="#/new" class="btn btn-primary">New</a>
+    <hr />
+    <table class="table striped">
+        <thead>
+        <tr>
+            <th>Name</th><th>Main Genre</th><th>Link</th><th>Favorite</th><th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% _.each(artists, function(artist) { %>
+        <tr>
+            <td><%= htmlEncode(artist.get('name')) %></td>
+            <td><%= htmlEncode(artist.get('main_genre')) %></td>
+            <td><a href=" <%= htmlEncode(artist.get('url')) %>">Link</a></td>
+            <td><% if(artist.get('fav') == 0){ %>
+                <button data-artist-id="<%= artist.id %>" class="btn addFav">Add</button>
+            <%
+                }
+                %>
+            </td>
+            <td><a class="btn" href="#/edit/<%= artist.id %>">Edit</a></td>
+        </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</script>
+<script type="text/template" id="edit-artist-template">
+    <form class="edit-artist-form">
+        <legend><%= artist ? 'Edit' : 'New' %> Artist</legend>
+        <label>Name</label>
+        <input name="name" type="text" value="<%= artist ? artist.get('name') : '' %>">
+        <label>Main genre</label>
+        <input name="main_genre" type="text" value="<%= artist ? artist.get('main_genre') : '' %>">
+        <label>Link</label>
+        <input name="url" type="text" value="<%= artist ? artist.get('url') : '' %>">
+        <hr />
+        <button type="submit" class="btn"><%= artist ? 'Update' : 'Create' %></button>
+        <% if(artist) { %>
+        <input type="hidden" name="id" value="<%= artist.id %>" />
+        <button data-artist-id="<%= artist.id %>" class="btn btn-danger delete">Delete</button>
+        <% }; %>
+    </form>
+</script>
+<script type="text/template" id="fav-artist-list-template">
+    <table class="table striped">
+        <thead>
+        <tr>
+            <th>Name</th><th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% _.each(favartists, function(favartist) { %>
+        <tr>
+            <td><%= htmlEncode(favartist.get('name')) %></td>
+            <td><button data-artist-id="<%= favartist.id %>" class="btn btn-danger remove">Remove</button></td>
+        </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</script>
+<!--Init-->
+<script src="init.js"></script>
+
+
+</body>
+</html> 
